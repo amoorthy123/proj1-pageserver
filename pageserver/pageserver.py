@@ -90,6 +90,15 @@ def respond(sock):
     log.info("Request was {}\n***\n".format(request))
 
     parts = request.split()
+    print(parts[0])
+    print(parts[1])
+    if parts[1].endswith(".html") or parts[1].endswith(".css"):
+        print("URL ends with html or css")
+    elif parts[1].startswith("~") or parts[1].startswith("//") or parts[1].startswith(".."):
+        print("403 error")
+    else:
+        print("404 error")
+
     if len(parts) > 1 and parts[0] == "GET":
         transmit(STATUS_OK, sock)
         transmit(CAT, sock)
@@ -97,7 +106,6 @@ def respond(sock):
         log.info("Unhandled request: {}".format(request))
         transmit(STATUS_NOT_IMPLEMENTED, sock)
         transmit("\nI don't handle this request: {}\n".format(request), sock)
-
     sock.shutdown(socket.SHUT_RDWR)
     sock.close()
     return
